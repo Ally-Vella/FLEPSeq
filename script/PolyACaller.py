@@ -449,7 +449,10 @@ def extract_polya_from_reads(file_fast5, adapter_data, basecall_group="", raw_fi
             except:
                 read_core_id = None
             if is_fast5:
-                read = Fast5Read(IN, read_id, basecall_group, config_info = row)
+                try:
+                    read = Fast5Read(IN, read_id, basecall_group, config_info = row)
+                except:
+                    continue
             else:
                 read = BasecallPickleRead(read_id, read_infos[read_id], 
                                           config_info = row, 
@@ -521,7 +524,10 @@ class Fast5Read():
     
     def __init__(self, IN, read_id=None, basecall_group="", config_info=None, need_scale_data=True):
         self.load_config(config_info)
-        self.read(IN, read_id, basecall_group)
+        try:
+            self.read(IN, read_id, basecall_group)
+        except:
+            raise
         if need_scale_data:
             self.scale_raw_data()
     
